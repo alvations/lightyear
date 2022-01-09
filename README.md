@@ -2,6 +2,9 @@
 
 To infinity and beyond...
 
+Install
+====
+
 ```
 pip install -U lightyear
 ```
@@ -11,7 +14,7 @@ Usage
 
 [in]:
 
-```
+```python
 from lightyear import Buzz
 
 hyp = 'The dog bit the man.'
