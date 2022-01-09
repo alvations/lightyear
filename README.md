@@ -2,6 +2,10 @@
 
 To infinity and beyond...
 
+```
+pip install -U lightyear
+```
+
 Usage
 ====
 
