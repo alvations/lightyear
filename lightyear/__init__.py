@@ -1,6 +1,5 @@
 
-from lightyear.metrics import *
-
+from .metrics import *
 
 class Buzz:
     def __init__(self, metrics='all', trg_lang='en', lowercase=False):

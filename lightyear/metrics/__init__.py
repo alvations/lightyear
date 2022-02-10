@@ -1,4 +1,4 @@
 
-from .metrics.bert_score import BERTScore
-from .metrics.bleu import BLEUScore, CHRFScore, TERScore
-from .metrics.comet import COMETScore
+from .bert_score import BERTScore
+from .bleu import BLEUScore, CHRFScore, TERScore
+from .comet import COMETScore

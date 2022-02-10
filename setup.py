@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
   name = 'lightyear',
-  packages = ['lightyear'],
-  version = '0.0.5',
+  packages = find_packages(),
+  version = '0.0.10',
   description = 'lightyear',
   long_description = '',
   author = '',
