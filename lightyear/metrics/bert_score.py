@@ -2,7 +2,7 @@ import bert_score
 
 
 class BERTScore:
-    def score(self, hyp: str, ref: str, normalize=True):
+    def score(self, hyp: str, ref: str, src=None, normalize=True, *args, **kwargs):
         precision, recall, f1 = map(float, bert_score.score([hyp], [[ref]], lang='en'))
         score = f1 * 100 if normalize else f1
         return {'bert_score':{'precision': precision,

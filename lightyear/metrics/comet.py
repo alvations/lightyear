@@ -14,7 +14,7 @@ class COMETScore:
         self.trainer = Trainer(gpus=_cuda, deterministic=True, logger=False)
         self.prep_sample = partial(self.model.prepare_sample, inference=True)
 
-    def score(self, hyp: str, ref: str, src: str=None, normalize=True):
+    def score(self, hyp: str, ref: str, src: str=None, normalize=True, clip=True, *args, **kwargs):
         data = {"src": src, "mt": hyp, "ref": ref} if src else {"src": ref, "mt": hyp, "ref": ref}
         dataloader = DataLoader(
             dataset=[data],
