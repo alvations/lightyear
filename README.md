@@ -12,6 +12,8 @@ pip install -U lightyear
 Usage
 ====
 
+## Typical Hyp + Ref Setup
+
 [in]:
 
 ```python
@@ -34,6 +36,33 @@ buzz.score(hyp, ref)
  'ter_score': 16.666666666666664}
 ```
 
+## Hyp + Ref + Src setup
+
+[in]:
+
+```python
+from lightyear import Buzz
+
+
+src = 'The dog bit the man.'
+hyp = 'Hund Mann gebissen.'
+ref = 'Der Hund hatte den Mann gebissen.'
+
+buzz = Buzz(metrics='all', trg_lang='de', lowercase=True)
+
+print(buzz.score(hyp, ref))
+print(buzz.score(hyp, ref, src))
+```
+
+[out]:
+
+```
+{'bert_score': 89.7886335849762, 'bleu_score': 30.18153515504547, 'comet_score': 17.846399545669556, 'chrf_score': 51.512405379593574, 'ter_score': 50.0}
+{'bert_score': 89.7886335849762, 'bleu_score': 30.18153515504547, 'comet_score': 6.618038564920425, 'chrf_score': 51.512405379593574, 'ter_score': 50.0}
+```
+
+## Only fast metrics
+
 
 [in]:
 
@@ -52,4 +81,5 @@ with open('hyp.txt') as hfin, open('ref.txt') as rfin:
 {'bleu_score': 11.631736348831648, 'chrf_score': 25.66796545720479, 'ter_score': 100.0}
 {'bleu_score': 21.3643503198117, 'chrf_score': 38.2883972133884, 'ter_score': 75.0}
 ```
+
 
