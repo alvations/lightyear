@@ -37,7 +37,7 @@ buzz.score(hyp, ref)
 
 [in]:
 
-```
+```python
 from lightyear import Buzz
 
 buzz = Buzz(metrics='fast', lowercase=True)
@@ -45,7 +45,6 @@ buzz = Buzz(metrics='fast', lowercase=True)
 with open('hyp.txt') as hfin, open('ref.txt') as rfin:
     for hyp, ref in zip(hfin, rfin):
         print(buzz.score(hyp, ref))
-
 ```
 
 
