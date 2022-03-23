@@ -82,4 +82,31 @@ with open('hyp.txt') as hfin, open('ref.txt') as rfin:
 {'bleu_score': 21.3643503198117, 'chrf_score': 38.2883972133884, 'ter_score': 75.0}
 ```
 
+## Using Machine Translators
 
+[in]:
+
+```
+from lightyear.translators import M2MTranslator
+from lightyear.translators import HelsinkiMarianTranslator
+
+hema = HelsinkiMarianTranslator()
+print(hema.translate('en', 'de', 'I am pregnant'))
+print(hema.translate('de', 'zh', 'Ich bin schwanger'))
+
+print()
+
+m2m = M2MTranslator()
+print(m2m.translate('en', 'de', 'I am pregnant'))
+print(m2m.translate('de', 'zh', 'Ich bin schwanger'))
+```
+
+[out]:
+
+```
+Ich bin schwanger
+我怀孕了 我怀孕了
+
+Ich bin schwanger.
+我怀孕了
+```
