@@ -86,9 +86,9 @@ with open('hyp.txt') as hfin, open('ref.txt') as rfin:
 
 [in]:
 
-```
-from lightyear.translators import M2MTranslator
+```python
 from lightyear.translators import HelsinkiMarianTranslator
+from lightyear.translators import M2MTranslator
 
 hema = HelsinkiMarianTranslator()
 print(hema.translate('en', 'de', 'I am pregnant'))

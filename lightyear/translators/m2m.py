@@ -1,4 +1,5 @@
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+import torch
 from torch import nn
 from torch.nn.utils import prune
 
@@ -10,7 +11,7 @@ class M2MTranslator:
             self.model = torch.quantization.quantize_dynamic(model,
                 {nn.LayerNorm, nn.Linear}, dtype=torch.qint8)
         if prune:
-            for module in model_quantized.modules():
+            for module in self.model.modules():
                 if isinstance(module, nn.Linear):
                     prune.l1_unstructured(module, 'weight', amount=prune_amount)
                     prune.remove(module, 'weight')

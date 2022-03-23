@@ -1,6 +1,9 @@
 from itertools import chain
 
 from transformers import MarianMTModel, MarianTokenizer
+import torch
+from torch import nn
+from torch.nn.utils import prune
 
 supported_langs = {
     'af': {'sv', 'fi', 'ru', 'nl', 'de', 'es', 'fr', 'en'},
@@ -102,7 +105,8 @@ class HelsinkiMarianTranslator:
         self._languages = set(supported_langs.keys()) | set(chain(*supported_langs.values()))
         self._models = {}
 
-    def load_model(self, src_lang, trg_lang):
+    def load_model(self, src_lang, trg_lang,
+                   quantize=True, prune=True, prune_amount=0.2):
         # Check if language pair is pre-loaded.
         model_name = f"Helsinki-NLP/opus-mt-{src_lang}-{trg_lang}"
         if model_name in self._models:
@@ -110,6 +114,14 @@ class HelsinkiMarianTranslator:
         else:
             tokenizer = MarianTokenizer.from_pretrained(model_name)
             model = MarianMTModel.from_pretrained(model_name)
+            if quantize:
+                model = torch.quantization.quantize_dynamic(model,
+                    {nn.LayerNorm, nn.Linear}, dtype=torch.qint8)
+            if prune:
+                for module in model.modules():
+                    if isinstance(module, nn.Linear):
+                        prune.l1_unstructured(module, 'weight', amount=prune_amount)
+                        prune.remove(module, 'weight')
             self._models[model_name] = tokenizer, model
         return tokenizer, model
 
