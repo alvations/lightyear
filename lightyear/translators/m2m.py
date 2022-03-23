@@ -8,7 +8,7 @@ class M2MTranslator:
     def __init__(self, quantize=True, prune=True, prune_amount=0.2):
         self.model = M2M100ForConditionalGeneration.from_pretrained("facebook/m2m100_418M")
         if quantize:
-            self.model = torch.quantization.quantize_dynamic(model,
+            self.model = torch.quantization.quantize_dynamic(self.model,
                 {nn.LayerNorm, nn.Linear}, dtype=torch.qint8)
         if prune:
             for module in self.model.modules():
