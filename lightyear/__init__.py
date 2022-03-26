@@ -17,7 +17,7 @@ class Buzz:
                 'chrf_score': CHRFScore(lowercase=lowercase),
                 'ter_score': TERScore(lowercase=lowercase)
                 }
-            
+
 
     def score(self, hyp, ref, src=None, normalize=True, clip=True):
         scores = {}
