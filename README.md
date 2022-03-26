@@ -43,7 +43,6 @@ buzz.score(hyp, ref)
 ```python
 from lightyear import Buzz
 
-
 src = 'The dog bit the man.'
 hyp = 'Hund Mann gebissen.'
 ref = 'Der Hund hatte den Mann gebissen.'
