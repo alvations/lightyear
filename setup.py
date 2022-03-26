@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
   name = 'lightyear',
   packages = find_packages(),
-  version = '0.0.13',
+  version = '0.0.14',
   description = 'lightyear',
   long_description = '',
   author = '',
