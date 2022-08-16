@@ -1,9 +1,9 @@
 from itertools import chain
 
 from transformers import MarianMTModel, MarianTokenizer
-import torch
-from torch import nn
-from torch.nn.utils import prune
+
+from ..utils import prune_model, quantize_model
+
 
 supported_langs = {
     'af': {'sv', 'fi', 'ru', 'nl', 'de', 'es', 'fr', 'en'},
@@ -100,6 +100,7 @@ supported_langs = {
             'vi'}
 }
 
+
 class HelsinkiMarianTranslator:
     def __init__(self):
         self._languages = set(supported_langs.keys()) | set(chain(*supported_langs.values()))
@@ -115,17 +116,13 @@ class HelsinkiMarianTranslator:
             tokenizer = MarianTokenizer.from_pretrained(model_name)
             model = MarianMTModel.from_pretrained(model_name)
             if quantize:
-                model = torch.quantization.quantize_dynamic(model,
-                    {nn.LayerNorm, nn.Linear}, dtype=torch.qint8)
+                self.model = quantize_model(self.model)
             if prune:
-                for module in model.modules():
-                    if isinstance(module, nn.Linear):
-                        prune.l1_unstructured(module, 'weight', amount=prune_amount)
-                        prune.remove(module, 'weight')
+                self.prune = prune_model(self.model, prune_amount)
             self._models[model_name] = tokenizer, model
         return tokenizer, model
 
-    def translate(self, src_lang, trg_lang, text, pivot=True):
+    def translate(self, src_lang, trg_lang, text, pivot=True, max_length=max_length, **kwargs):
         processes = []
         if src_lang in supported_langs and trg_lang in supported_langs[src_lang]:
             processes.append(self.load_model(src_lang, trg_lang))
@@ -135,7 +132,8 @@ class HelsinkiMarianTranslator:
 
         translated_text = text
         for tokenizer, model in processes:
-            translated = model.generate(**tokenizer([translated_text], return_tensors="pt", padding=True))
+            translated = model.generate(**tokenizer([translated_text], return_tensors="pt", padding=True),
+                 max_length=max_length, **kwargs)
             translated_text = tokenizer.decode(translated[0], skip_special_tokens=True)
         return translated_text
 
