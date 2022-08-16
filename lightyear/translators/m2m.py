@@ -11,7 +11,7 @@ class M2MTranslator:
         if prune:
             self.prune = prune_model(self.model, prune_amount)
 
-    def translate(self, src_lang, trg_lang, text, max_length=max_length, **kwargs):
+    def translate(self, src_lang, trg_lang, text, max_length=1000, **kwargs):
         self.tokenizer.src_lang = src_lang
         tokenized_src = self.tokenizer(text, return_tensors="pt")
 

@@ -122,7 +122,7 @@ class HelsinkiMarianTranslator:
             self._models[model_name] = tokenizer, model
         return tokenizer, model
 
-    def translate(self, src_lang, trg_lang, text, pivot=True, max_length=max_length, **kwargs):
+    def translate(self, src_lang, trg_lang, text, pivot=True, max_length=1000, **kwargs):
         processes = []
         if src_lang in supported_langs and trg_lang in supported_langs[src_lang]:
             processes.append(self.load_model(src_lang, trg_lang))
