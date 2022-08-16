@@ -88,6 +88,7 @@ with open('hyp.txt') as hfin, open('ref.txt') as rfin:
 ```python
 from lightyear.translators import HelsinkiMarianTranslator
 from lightyear.translators import M2MTranslator
+from lightyear.translators import NLLBTranslator
 
 hema = HelsinkiMarianTranslator()
 print(hema.translate('en', 'de', 'I am pregnant'))
@@ -98,6 +99,12 @@ print()
 m2m = M2MTranslator()
 print(m2m.translate('en', 'de', 'I am pregnant'))
 print(m2m.translate('de', 'zh', 'Ich bin schwanger'))
+
+print()
+
+nllb = NLLBTranslator()
+print(nllb.translate('eng_Latn', 'deu_Latn', 'I am pregnant'))
+print(nllb.translate('deu_Latn', 'zho_Hans', 'Ich bin schwanger'))
 ```
 
 [out]:
@@ -105,6 +112,9 @@ print(m2m.translate('de', 'zh', 'Ich bin schwanger'))
 ```
 Ich bin schwanger
 我怀孕了 我怀孕了
+
+Ich bin schwanger.
+我怀孕了
 
 Ich bin schwanger.
 我怀孕了
