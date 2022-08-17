@@ -29,9 +29,10 @@ buzz.score(hyp, ref)
 [out]:
 
 ```
-{'bert_score': 98.19023013114929,
+{'bert_score': 94.1470742225647,
  'bleu_score': 51.15078115793242,
  'comet_score': 100,
+ 'sentbert_score': 94.68643069267273,
  'chrf_score': 67.64711450656517,
  'ter_score': 16.666666666666664}
 ```
@@ -56,8 +57,8 @@ print(buzz.score(hyp, ref, src))
 [out]:
 
 ```
-{'bert_score': 89.7886335849762, 'bleu_score': 30.18153515504547, 'comet_score': 17.846399545669556, 'chrf_score': 51.512405379593574, 'ter_score': 50.0}
-{'bert_score': 89.7886335849762, 'bleu_score': 30.18153515504547, 'comet_score': 6.618038564920425, 'chrf_score': 51.512405379593574, 'ter_score': 50.0}
+{'bert_score': 77.92478203773499, 'bleu_score': 30.18153515504547, 'comet_score': 17.846399545669556, 'sentbert_score': 95.38536667823792, 'chrf_score': 51.512405379593574, 'ter_score': 50.0}
+{'bert_score': 77.92478203773499, 'bleu_score': 30.18153515504547, 'comet_score': 6.618038564920425, 'sentbert_score': 95.38536667823792, 'chrf_score': 51.512405379593574, 'ter_score': 50.0}
 ```
 
 ## Only fast metrics
