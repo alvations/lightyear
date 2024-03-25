@@ -4,6 +4,10 @@ from .metrics import *
 
 class Buzz:
     def __init__(self, metrics='all', trg_lang='en', lowercase=False):
+        """
+        metrics = [default:all, fast, chrf, bleu, ter, sentbert, bert, comet]
+        lowercase  = [default:False, True]
+        """
         if metrics == 'all':
             self.metrics = {
                 'bert_score': BERTScore(),
@@ -19,7 +23,30 @@ class Buzz:
                 'chrf_score': CHRFScore(lowercase=lowercase),
                 'ter_score': TERScore(lowercase=lowercase)
                 }
-
+        elif metrics == "chrf":
+            self.metrics = {
+                'chrf_score': CHRFScore(lowercase=lowercase),
+            }
+        elif metrics == "bleu":
+            self.metrics = {
+                'bleu_score': BLEUScore(trg_lang=trg_lang, lowercase=lowercase),
+            }
+        elif metrics == "ter":
+            self.metrics = {
+                'ter_score': TERScore(lowercase=lowercase)
+            }
+        elif metrics == "sentbert":
+            self.metrics = {
+                'sentbert_score': SentenceBERTScore(),
+            }
+        elif metrics == "bert":
+            self.metrics = {
+                'bert_score': BERTScore(),
+            }
+        elif metrics == "comet":
+            self.metrics = {
+                'comet+_score': COMETScore(),
+            }
     def score(self, hyp, ref, src=None, normalize=True, clip=True):
         # Processing Inputs
         hyp, ref = hyp.strip(), ref.strip()
