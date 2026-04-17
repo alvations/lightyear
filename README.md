@@ -180,7 +180,8 @@ Ich bin schwanger.
 我怀孕了
 ```
 
-## Parity verification
+<details>
+<summary><b>Parity verification</b></summary>
 
 The neural metrics were checked bit-exact against the upstream libraries
 on sample inputs before the rewrite landed:
@@ -205,3 +206,5 @@ Gotchas found during the port:
   softmax in the library; we replicate that.
 - MetricX's EOS-strip needs to happen per-row before padding, not via a
   global column slice.
+
+</details>
