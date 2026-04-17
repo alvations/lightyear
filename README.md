@@ -9,10 +9,6 @@ Install
 pip install -U lightyear
 ```
 
-Dependencies (all via pip):
-`sacrebleu`, `torch`, `transformers`, `datasets`, `sentencepiece`,
-`sentence-transformers`.
-
 Usage
 ====
 
