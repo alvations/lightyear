@@ -1,38 +1,20 @@
-
 import torch
-from transformers import AutoTokenizer, AutoModel
-
-from ..utils import prune_model, quantize_model
+from sentence_transformers import SentenceTransformer, util
 
 
 class SentenceBERTScore:
     def __init__(self, modelname='sentence-transformers/stsb-xlm-r-multilingual', cuda=True):
-        _cuda = "cuda" if cuda and torch.cuda.is_available() else "cpu"
-        
-        self.tokenizer = AutoTokenizer.from_pretrained(modelname)
-        self.model = prune_model(quantize_model(
-            AutoModel.from_pretrained(modelname)
-        )).to(_cuda)
+        device = "cuda" if cuda and torch.cuda.is_available() else "cpu"
+        self.model = SentenceTransformer(modelname, device=device)
 
-        self.cosine = torch.nn.CosineSimilarity(dim=0)
+    def score(self, hyp: str, ref: str, src: str = None, normalize=True, *args, **kwargs):
+        emb = self.model.encode([hyp, ref], convert_to_tensor=True, normalize_embeddings=True)
+        score = float(util.cos_sim(emb[0], emb[1]))
+        return {'sentbert_score': {'score': score * 100 if normalize else score}}
 
-    def score(self, hyp: str, ref: str, src: str=None, normalize=True, *args, **kwargs):
-        # Process inputs.       
-        encoded_input = self.tokenizer([hyp, ref], 
-            padding=True, truncation=True, return_tensors='pt'
-        )
-
-        with torch.no_grad():
-            model_output = self.model(**encoded_input)
-
-        # Perform pooling. In this case, mean pooling.
-        s1, s2 = self.mean_pooling(model_output, encoded_input['attention_mask'])
-        score = float(self.cosine(s1, s2))
-        score = score * 100 if normalize else score
-        return {'sentbert_score':{'score': score}}
-
-    def mean_pooling(self, model_output, attention_mask):
-        """Mean Pooling - Take attention mask into account for correct averaging"""
-        token_embeddings = model_output[0] #First element of model_output contains all token embeddings
-        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-        return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+    def score_batch(self, hyps, refs, srcs=None, normalize=True, *args, **kwargs):
+        h = self.model.encode(hyps, convert_to_tensor=True, normalize_embeddings=True)
+        r = self.model.encode(refs, convert_to_tensor=True, normalize_embeddings=True)
+        scores = (h * r).sum(dim=1).tolist()
+        scores = [s * 100 for s in scores] if normalize else scores
+        return {'sentbert_score': {'score': scores}}
