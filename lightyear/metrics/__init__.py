@@ -5,7 +5,10 @@ _LAZY = {
     "BERTScore": ("bertscore", "BERTScore"),
     "SentenceBERTScore": ("sentbert", "SentenceBERTScore"),
     "COMETScore": ("comet", "COMETScore"),
+    "CometKiwiScore": ("comet", "CometKiwiScore"),
     "MetricXScore": ("metricx", "MetricXScore"),
+    "DifficultyScore": ("difficulty", "DifficultyScore"),
+    "SentinelSrcScore": ("difficulty", "SentinelSrcScore"),
 }
 
 

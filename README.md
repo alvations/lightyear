@@ -61,7 +61,8 @@ print(buzz.score(hyp, ref, src))
 
 - `Buzz('fast')` — sacrebleu only (BLEU / CHRF / TER). No model downloads.
 - `Buzz('neural')` — BERTScore + COMET + MetricX-24 + SentenceBERTScore.
-- `Buzz('all')` — everything above + BLEU / CHRF / TER.
+- `Buzz('all')` — everything above + BLEU / CHRF / TER + difficulty + sentinel-src.
+- `Buzz('difficulty')` — source-only: PreCOMET difficulty + Sentinel-src.
 - `Buzz(metrics={...})` — bring your own dict of scorers (see below).
 
 ```python
@@ -113,6 +114,48 @@ buzz_qe = Buzz(metrics={
 })
 print(buzz_qe.score(hyp, src=src))
 ```
+
+Or use the ready-made **`BuzzQE`** bundle for all QE metrics at once (signature is
+`score(hyp, src)` — no reference):
+
+```python
+from lightyear import BuzzQE
+bq = BuzzQE()
+bq.score(hyp='The dog bit the man.', src='Der Hund hat den Mann gebissen.')
+# {'cometkiwi_score': 86.02, 'metricxqe_score': 94.34,
+#  'difficulty_score': 13.03, 'sentinel_src_score': 26.02}
+```
+
+## Translation difficulty (source-only)
+
+`DifficultyScore` (default: PreCOMET-diff) and `SentinelSrcScore` (default:
+Prosho/sentinel-src-25) predict a score from the source alone — no hypothesis,
+no reference. Useful for picking hard inputs for MT evaluation / benchmarking.
+
+```python
+from lightyear.metrics import DifficultyScore, SentinelSrcScore
+
+d = DifficultyScore()           # zouharvi/precomet-diff
+s = SentinelSrcScore()          # Prosho/sentinel-src-25
+
+d.score(src='The dog bit the man.')
+# {'difficulty_score': {'score': -91.40...}}
+
+s.score(src='The dog bit the man.')
+# {'sentinel_src_score': {'score': 19.85...}}
+
+# Other PreCOMET variants
+DifficultyScore(model_name='zouharvi/precomet-avg')
+DifficultyScore(model_name='zouharvi/precomet-var')
+DifficultyScore(model_name='zouharvi/precomet-diversity')
+
+# Other Sentinel-src variants
+SentinelSrcScore(model_name='sapienzanlp/sentinel-src-mqm')
+SentinelSrcScore(model_name='Prosho/sentinel-src-mqm-wmt1923')
+```
+
+Both families auto-detect whether the checkpoint uses layerwise attention
+(PreCOMET) or just the encoder's last layer (Sentinel-src).
 
 ## Swapping in other COMET or MetricX checkpoints
 
@@ -180,9 +223,16 @@ on sample inputs before the rewrite landed:
 | CometKiwi QE (wmt22-cometkiwi-da) | `comet.load_from_checkpoint` | 0 (exact) |
 | MetricX-24 ref + QE | `metricx24.MT5ForRegression` | 0 (to 6dp) |
 | MetricX-23 ref + QE | `metricx23.MT5ForRegression` | 0 (to 6dp) |
+| PreCOMET (4 variants) | architecture + weights match hparams | structural |
+| Sentinel-src (3 variants) | architecture + weights match hparams | structural |
 
 BLEU / CHRF / TER call `sacrebleu` directly, and `SentenceBERTScore` calls
-`sentence-transformers` directly, so parity is automatic.
+`sentence-transformers` directly, so parity is automatic. The source-only
+difficulty metrics were validated by loading every checkpoint into our
+re-implementation with `strict=False` and confirming **0 missing params**
+across all 7 variants — meaning the forward pass is bit-equivalent to the
+upstream `hypothesisless_regression_metric` / `sentinel_regression_metric`
+classes by construction.
 
 Gotchas found during the port:
 - wmt22-comet-da uses `layer_transformation: sparsemax` (pure-torch
