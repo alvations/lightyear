@@ -2,15 +2,6 @@
 
 To infinity and beyond...
 
-A unified MT-evaluation toolbox. Wraps **sacrebleu** (BLEU / CHRF / TER) and
-re-implements **BERTScore**, **COMET**, **CometKiwi**, **MetricX-23**,
-**MetricX-24**, and **SentenceBERTScore** on top of plain
-`transformers` + `torch` + `sentence-transformers` — no
-`pytorch-lightning`, no `unbabel-comet`, no `bert_score` dependency.
-
-All neural metrics are **bit-exact parity-verified** against their original
-libraries on sample inputs (see parity notes below).
-
 Install
 ====
 
